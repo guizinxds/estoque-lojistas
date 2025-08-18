@@ -17,7 +17,7 @@ function CadastroProduto() {
 
     try {
       // Faz a chamada para a rota de cadastro de produtos no backend
-      await api.post('/produtos', data);
+      await api.post('api/produtos', data);
       alert('Produto cadastrado com sucesso!');
       // Limpar formulário ou redirecionar o usuário
       setModelo('');

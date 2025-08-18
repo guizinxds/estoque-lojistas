@@ -1,14 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
-// Importa suas páginas
 import CadastroProduto from './pages/CadastroProduto';
 import ListaEstoque from './pages/ListaEstoque';
 import RegistroVenda from './pages/RegistroVenda';
-// import Relatorios from './pages/Relatorios';
-// import Login from './pages/Login';
 
-// Importa sua barra de navegação
 import NavBar from './components/NavBar';
 
 function App() {
