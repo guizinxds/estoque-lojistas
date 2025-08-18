@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../../api'; // Certifique-se de que o caminho está correto
+import api from '../services/api.js';
 
 const Login = () => {
     const [email, setEmail] = useState('');

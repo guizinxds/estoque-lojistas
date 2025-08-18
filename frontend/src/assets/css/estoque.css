@@ -1,0 +1,111 @@
+.container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+.estoque-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.estoque-header h2 {
+    font-size: 2rem;
+    color: #444;
+}
+
+.search-input {
+    width: 300px;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.estoque-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden; /* Para garantir que as bordas arredondadas funcionem */
+}
+
+.estoque-table thead {
+    background-color: #f8f9fa;
+}
+
+.estoque-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.estoque-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+.estoque-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.low-stock {
+    color: #dc3545; /* Cor vermelha para produtos com baixo estoque */
+    font-weight: 600;
+}
+
+.edit-button,
+.delete-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.edit-button {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.edit-button:hover {
+    background-color: #e0a800;
+}
+
+.delete-button {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.error-message {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 1rem;
+    border-radius: 4px;
+    text-align: center;
+    margin-top: 2rem;
+}
