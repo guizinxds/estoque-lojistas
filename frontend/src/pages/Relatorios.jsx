@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import api from '../services/api.js';
+import api from '../services/api';
 import Header from '../components/Header';
-import '../assets/css/relatorio.css'; 
+import '../assets/css/relatorio.css';
 
 const Relatorios = () => {
-    const [relatoriosData, setRelatoriosData] = useState(null);
+    const [maisVendidos, setMaisVendidos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchRelatorios = async () => {
             try {
+                const response = await api.get('/relatorios/mais-vendidos');
+                setMaisVendidos(response.data);
                 setLoading(false);
             } catch (err) {
                 setError('Falha ao carregar os relatórios.');
@@ -22,38 +24,41 @@ const Relatorios = () => {
         fetchRelatorios();
     }, []);
 
-    if (loading) {
-        return <p>Carregando relatórios...</p>;
-    }
-
-    if (error) {
-        return <p className="error-message">{error}</p>;
-    }
+    if (loading) return <p>Carregando relatórios...</p>;
+    if (error) return <p className="error-message">{error}</p>;
 
     return (
         <>
             <Header />
             <div className="container">
                 <div className="relatorios-header">
-                    <h2>Relatórios</h2>
+                    <h2>Relatório de Vendas</h2>
                 </div>
                 
                 <div className="report-card">
-                    <h3>Vendas por Período</h3>
-                    <p>Aqui você poderá ver um gráfico de vendas ao longo do tempo.</p>
-                    <div className="placeholder-chart"></div>
-                </div>
-
-                <div className="report-card">
                     <h3>Produtos Mais Vendidos</h3>
-                    <p>Lista dos produtos que mais saíram do estoque.</p>
-                    <div className="placeholder-list"></div>
-                </div>
-
-                <div className="report-card">
-                    <h3>Estoque Crítico</h3>
-                    <p>Produtos que estão com o estoque baixo e precisam ser reabastecidos.</p>
-                    <div className="placeholder-list"></div>
+                    {maisVendidos.length > 0 ? (
+                        <table className="relatorio-table">
+                            <thead>
+                                <tr>
+                                    <th>Posição</th>
+                                    <th>Nome do Produto</th>
+                                    <th>Quantidade Total Vendida</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {maisVendidos.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.nome}</td>
+                                        <td>{item.quantidadeVendida}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p>Nenhum dado de vendas para exibir.</p>
+                    )}
                 </div>
             </div>
         </>

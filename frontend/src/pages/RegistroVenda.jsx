@@ -1,20 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import Header from '../components/Header';
 import '../assets/css/registro-venda.css';
 
 const RegistroVenda = () => {
+    const [produtos, setProdutos] = useState([]);
     const [formData, setFormData] = useState({
-        nomeProduto: '',
-        quantidade: '',
+        produtoId: '',
+        quantidade: 1, // Começa com quantidade 1
         precoTotal: '',
     });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProdutos = async () => {
+            try {
+                const response = await api.get('/produtos');
+                setProdutos(response.data);
+                setLoading(false);
+            } catch (err) {
+                setError('Não foi possível carregar a lista de produtos.');
+                setLoading(false);
+                console.error('Erro ao buscar produtos:', err);
+            }
+        };
+        fetchProdutos();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        
+        let newFormData = { ...formData, [name]: value };
+
+        // Lógica para recalcular o preço total
+        if (name === 'produtoId' || name === 'quantidade') {
+            const selectedProduct = produtos.find(p => p.id === parseInt(newFormData.produtoId));
+            const quantidade = parseInt(newFormData.quantidade);
+            if (selectedProduct && quantidade > 0) {
+                newFormData.precoTotal = (selectedProduct.preco * quantidade).toFixed(2);
+            } else {
+                newFormData.precoTotal = '';
+            }
+        }
+
+        setFormData(newFormData);
     };
 
     const handleSubmit = async (e) => {
@@ -23,18 +54,25 @@ const RegistroVenda = () => {
         setError('');
 
         try {
-            const response = await api.post('/vendas', formData); // Rota de registro de venda
+            await api.post('/vendas', {
+                ...formData,
+                quantidade: parseInt(formData.quantidade),
+                precoTotal: parseFloat(formData.precoTotal)
+            });
             setMessage('Venda registrada com sucesso!');
             setFormData({
-                nomeProduto: '',
-                quantidade: '',
+                produtoId: '',
+                quantidade: 1,
                 precoTotal: '',
             });
         } catch (err) {
             setError('Falha ao registrar a venda. Verifique os dados.');
-            console.error('Erro ao registrar venda:', err);
+            console.error('Erro ao registrar venda:', err.response?.data?.error || err.message);
         }
     };
+    
+    if (loading) return <p>Carregando produtos...</p>;
+    if (error) return <p className="error-message">{error}</p>;
 
     return (
         <>
@@ -47,16 +85,23 @@ const RegistroVenda = () => {
                         {error && <p className="error-message">{error}</p>}
                         
                         <div className="form-group">
-                            <label htmlFor="nomeProduto">Nome do Produto</label>
-                            <input
-                                type="text"
-                                id="nomeProduto"
-                                name="nomeProduto"
-                                value={formData.nomeProduto}
+                            <label htmlFor="produtoId">Produto</label>
+                            <select
+                                id="produtoId"
+                                name="produtoId"
+                                value={formData.produtoId}
                                 onChange={handleChange}
                                 required
-                            />
+                            >
+                                <option value="" disabled>Selecione um produto</option>
+                                {produtos.map(produto => (
+                                    <option key={produto.id} value={produto.id}>
+                                        {produto.nome}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
+
                         <div className="form-group">
                             <label htmlFor="quantidade">Quantidade</label>
                             <input
@@ -77,6 +122,7 @@ const RegistroVenda = () => {
                                 value={formData.precoTotal}
                                 onChange={handleChange}
                                 step="0.01"
+                                readOnly // Impede que o usuário edite o campo
                                 required
                             />
                         </div>

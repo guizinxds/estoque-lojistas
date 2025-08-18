@@ -1,20 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
+    const [companyName, setCompanyName] = useState('');
+
+    useEffect(() => {
+        const storedName = localStorage.getItem('companyName');
+        if (storedName) {
+            setCompanyName(storedName);
+        }
+    }, []);
+
     return (
-        <header style={{ 
-            backgroundColor: '#333', 
-            padding: '15px 20px', 
-            display: 'flex', 
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-        }}>
+        <header className="header-container">
+            <h1>{companyName || 'Meu Sistema de Estoque'}</h1>
             <nav>
-                <Link to="/cadastro" style={{ color: '#fff', textDecoration: 'none', margin: '0 15px', fontWeight: 'bold' }}>Cadastro</Link>
-                <Link to="/estoque" style={{ color: '#fff', textDecoration: 'none', margin: '0 15px', fontWeight: 'bold' }}>Estoque</Link>
-                <Link to="/venda" style={{ color: '#fff', textDecoration: 'none', margin: '0 15px', fontWeight: 'bold' }}>Venda</Link>
-                <Link to="/relatorios" style={{ color: '#fff', textDecoration: 'none', margin: '0 15px', fontWeight: 'bold' }}>Relatórios</Link>
+                <Link to="/cadastro">Cadastro</Link>
+                <Link to="/estoque">Estoque</Link>
+                <Link to="/venda">Venda</Link>
+                <Link to="/relatorios">Relatórios</Link>
             </nav>
         </header>
     );

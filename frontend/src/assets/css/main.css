@@ -1,0 +1,175 @@
+/* --- Estilos Gerais --- */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+}
+
+/* --- Tabela Profissional --- */
+.professional-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.professional-table thead th {
+    background-color: #f0f4f8;
+    padding: 1.2rem;
+    text-align: left;
+    font-weight: 700;
+    color: #4a5568;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.professional-table tbody td {
+    padding: 1.2rem;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.95rem;
+}
+
+.professional-table tbody tr:hover {
+    background-color: #f8f8f8;
+    transition: background-color 0.2s;
+}
+
+.professional-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.low-stock {
+    color: #e53e3e;
+    font-weight: 600;
+}
+
+/* --- Botões de Ação --- */
+.action-button {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 0.5rem;
+}
+
+.edit-button {
+    background-color: #3182ce;
+    color: #fff;
+}
+
+.edit-button:hover {
+    background-color: #2b6cb0;
+}
+
+.delete-button {
+    background-color: #e53e3e;
+    color: #fff;
+}
+
+.delete-button:hover {
+    background-color: #c53030;
+}
+
+/* --- Barra de Busca --- */
+.search-container {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.search-input {
+    width: 300px;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 25px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #4c4c4c;
+    box-shadow: 0 0 0 3px rgba(76, 76, 76, 0.1);
+}
+
+/* --- Layouts e Cards --- */
+.card-container {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.form-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 2rem;
+}
+
+.form-button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #48bb78;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-button:hover {
+    background-color: #38a169;
+}
+
+/* --- Mensagens e Headers --- */
+.header-container {
+    background-color: #2d3748;
+    color: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-container h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.header-container nav a {
+    color: #cbd5e0;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 1.5rem;
+    transition: color 0.2s;
+}
+
+.header-container nav a:hover {
+    color: #fff;
+}

@@ -5,6 +5,7 @@ import CadastroProduto from './pages/CadastroProduto';
 import ListaEstoque from './pages/ListaEstoque';
 import RegistroVenda from './pages/RegistroVenda';
 import Relatorios from './pages/Relatorios';
+import CadastroUsuario from './pages/CadastroUsuario';
 
 const App = () => {
   return (
@@ -12,10 +13,10 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         
-        {/* Adicionei uma rota de redirecionamento para o login, se necessário */}
+        <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
+        
         <Route path="/" element={<Navigate to="/login" />} />
 
-        {/* Rotas protegidas (você precisará de uma lógica para proteger estas rotas no futuro) */}
         <Route path="/cadastro" element={<CadastroProduto />} />
         <Route path="/estoque" element={<ListaEstoque />} />
         <Route path="/venda" element={<RegistroVenda />} />

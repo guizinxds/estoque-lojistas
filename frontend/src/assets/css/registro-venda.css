@@ -36,3 +36,26 @@
 .venda-button:hover {
     background-color: #0056b3;
 }
+
+.venda-form select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%20197.6c-4.3%204.3-11.2%204.3-15.5%200l-124.7-124.7-124.7%20124.7c-4.3%204.3-11.2%204.3-15.5%200s-4.3-11.2%200-15.5L138.5%2057.2c4.3-4.3%2011.2-4.3%2015.5%200l133%20133c4.3%204.3%204.3%2011.2%200%2015.5z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 0.8rem;
+}
+
+.venda-form select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}

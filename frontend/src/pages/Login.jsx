@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../services/api.js';
+import { useNavigate, Link } from 'react-router-dom';
+import api from '../services/api';
+import '../assets/css/auth.css';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -10,11 +11,15 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setError(''); // Limpa mensagens de erro anteriores
+        setError('');
         try {
-            const response = await api.post('/auth/login', { email, password }); // Adapte a rota se necessário
+            const response = await api.post('/auth/login', { email, password });
+            
+            // O backend retorna o token E o nome da empresa
             localStorage.setItem('token', response.data.token);
-            navigate('/estoque'); // Redireciona para a página de estoque após o login
+            localStorage.setItem('companyName', response.data.companyName); 
+
+            navigate('/estoque');
         } catch (err) {
             setError('E-mail ou senha incorretos.');
             console.error(err);
@@ -22,10 +27,11 @@ const Login = () => {
     };
 
     return (
-        <div className="login-container">
-            <form className="login-form" onSubmit={handleLogin}>
+        <div className="auth-container">
+            <form className="auth-form" onSubmit={handleLogin}>
                 <h2>Entrar</h2>
                 {error && <p className="error-message">{error}</p>}
+                
                 <div className="form-group">
                     <label htmlFor="email">E-mail</label>
                     <input
@@ -46,7 +52,12 @@ const Login = () => {
                         required
                     />
                 </div>
-                <button type="submit" className="login-button">Entrar</button>
+                
+                <button type="submit" className="auth-button">Entrar</button>
+
+                <div className="auth-link">
+                    Não tem uma conta? <Link to="/cadastro-usuario">Cadastre-se aqui.</Link>
+                </div>
             </form>
         </div>
     );

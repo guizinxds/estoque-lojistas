@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api.js';
 import Header from '../components/Header';
-import '../assets/css/estoque.css';
-import '../assets/css/modal.css';
+import '../assets/css/main.css'; // <--- A nova importação de CSS
+import '../assets/css/modal.css'; // O modal usa classes específicas
 
 const ListaEstoque = () => {
     const [produtos, setProdutos] = useState([]);
@@ -40,8 +40,8 @@ const ListaEstoque = () => {
         e.preventDefault();
         try {
             await api.put(`/produtos/${editingProduct.id}`, editingProduct);
-            await fetchProdutos(); // Recarrega a lista
-            setEditingProduct(null); // Fecha o modal
+            await fetchProdutos();
+            setEditingProduct(null);
         } catch (err) {
             setError('Falha ao atualizar o produto.');
             console.error('Erro ao atualizar produto:', err);
@@ -51,8 +51,8 @@ const ListaEstoque = () => {
     const handleConfirmDelete = async () => {
         try {
             await api.delete(`/produtos/${deletingProduct.id}`);
-            await fetchProdutos(); // Recarrega a lista
-            setDeletingProduct(null); // Fecha o modal
+            await fetchProdutos();
+            setDeletingProduct(null);
         } catch (err) {
             setError('Falha ao excluir o produto.');
             console.error('Erro ao excluir produto:', err);
@@ -70,8 +70,7 @@ const ListaEstoque = () => {
         <>
             <Header />
             <div className="container">
-                <div className="estoque-header">
-                    <h2>Produtos em Estoque</h2>
+                <div className="search-container">
                     <input
                         type="text"
                         placeholder="Buscar por nome..."
@@ -81,7 +80,7 @@ const ListaEstoque = () => {
                     />
                 </div>
                 {filteredProdutos.length > 0 ? (
-                    <table className="estoque-table">
+                    <table className="professional-table">
                         <thead>
                             <tr>
                                 <th>Nome</th>
@@ -99,8 +98,8 @@ const ListaEstoque = () => {
                                     <td className={produto.quantidade < 10 ? 'low-stock' : ''}>{produto.quantidade}</td>
                                     <td>{produto.descricao}</td>
                                     <td>
-                                        <button className="edit-button" onClick={() => handleEdit(produto)}>Editar</button>
-                                        <button className="delete-button" onClick={() => handleDelete(produto)}>Excluir</button>
+                                        <button className="action-button edit-button" onClick={() => handleEdit(produto)}>Editar</button>
+                                        <button className="action-button delete-button" onClick={() => handleDelete(produto)}>Excluir</button>
                                     </td>
                                 </tr>
                             ))}
