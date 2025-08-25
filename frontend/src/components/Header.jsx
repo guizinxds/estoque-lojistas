@@ -1,26 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 
-const Header = () => {
-    const [companyName, setCompanyName] = useState('');
-
-    useEffect(() => {
-        const storedName = localStorage.getItem('companyName');
-        if (storedName) {
-            setCompanyName(storedName);
-        }
-    }, []);
-
+const Header = ({ onToggleSidebar }) => {
     return (
-        <header className="header-container">
-            <h1>{companyName || 'Meu Sistema de Estoque'}</h1>
-            <nav>
-                <Link to="/cadastro">Cadastro</Link>
-                <Link to="/estoque">Estoque</Link>
-                <Link to="/venda">Venda</Link>
-                <Link to="/relatorios">Relatórios</Link>
-            </nav>
-        </header>
+        <AppBar 
+            position="fixed"
+            sx={{
+                zIndex: (theme) => theme.zIndex.drawer + 1, // Garante que o Header fique na frente da Sidebar
+                backgroundColor: '#ffffff',
+                color: '#111827',
+                boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.06), 0px 4px 5px 0px rgba(0,0,0,0.04), 0px 1px 10px 0px rgba(0,0,0,0.08)',
+            }}
+        >
+            <Toolbar>
+                <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={onToggleSidebar}
+                    edge="start"
+                    sx={{ mr: 2 }}
+                >
+                    <MenuIcon />
+                </IconButton>
+                <Typography variant="h6" noWrap component="div">
+                    Estoque 360
+                </Typography>
+            </Toolbar>
+        </AppBar>
     );
 };
 

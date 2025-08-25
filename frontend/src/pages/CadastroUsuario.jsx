@@ -7,7 +7,7 @@ const CadastroUsuario = () => {
     const [formData, setFormData] = useState({
         email: '',
         senha: '',
-        nomeEmpresa: '', // <--- Novo estado para o nome da empresa
+        nomeEmpresa: '',
     });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');

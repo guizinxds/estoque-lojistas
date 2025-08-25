@@ -41,6 +41,7 @@ app.post('/auth/register', async (req, res) => {
         });
         res.status(201).json({ message: 'Usuário criado com sucesso!', user: newUser });
     } catch (error) {
+        console.error('ERRO AO CADASTRAR USUÁRIO: ', error);
         res.status(500).json({ error: 'Falha ao cadastrar o usuário.' });
     }
 });
@@ -69,8 +70,6 @@ app.post('/auth/login', async (req, res) => {
         res.status(500).json({ error: 'Falha no login.' });
     }
 });
-
-
 
 // Registra as rotas da Dashboard com o prefixo /api/dashboard
 app.use('/api/dashboard', dashboardRoutes);
@@ -102,6 +101,8 @@ app.post('/api/produtos', authMiddleware, async (req, res) => {
         });
         res.status(201).json(novoProduto);
     } catch (error) {
+        console.error('ERRO AO CADASTRAR PRODUTO', error)
+
         res.status(500).json({ error: 'Falha ao cadastrar o produto.' });
     }
 });
