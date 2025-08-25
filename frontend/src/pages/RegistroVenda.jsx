@@ -1,29 +1,33 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import Header from '../components/Header';
-import '../assets/css/registro-venda.css';
+
+// Imports do Material-UI para um formulário profissional
+import { Box, Typography, Paper, Grid, TextField, Button, CircularProgress, Alert, InputAdornment, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 
 const RegistroVenda = () => {
+    const navigate = useNavigate();
     const [produtos, setProdutos] = useState([]);
     const [formData, setFormData] = useState({
         produtoId: '',
-        quantidade: 1, // Começa com quantidade 1
-        precoTotal: '',
+        quantidade: 1,
+        precoTotal: '0.00',
     });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         const fetchProdutos = async () => {
             try {
-                const response = await api.get('/produtos');
+                const response = await api.get('/api/produtos');
                 setProdutos(response.data);
-                setLoading(false);
             } catch (err) {
                 setError('Não foi possível carregar a lista de produtos.');
-                setLoading(false);
                 console.error('Erro ao buscar produtos:', err);
+            } finally {
+                setLoading(false);
             }
         };
         fetchProdutos();
@@ -34,103 +38,138 @@ const RegistroVenda = () => {
         
         let newFormData = { ...formData, [name]: value };
 
-        // Lógica para recalcular o preço total
         if (name === 'produtoId' || name === 'quantidade') {
             const selectedProduct = produtos.find(p => p.id === parseInt(newFormData.produtoId));
             const quantidade = parseInt(newFormData.quantidade);
             if (selectedProduct && quantidade > 0) {
                 newFormData.precoTotal = (selectedProduct.preco * quantidade).toFixed(2);
             } else {
-                newFormData.precoTotal = '';
+                newFormData.precoTotal = '0.00';
             }
         }
-
         setFormData(newFormData);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSubmitting(true);
         setMessage('');
         setError('');
 
         try {
-            await api.post('/vendas', {
-                ...formData,
+            await api.post('/api/vendas', {
+                produtoId: parseInt(formData.produtoId),
                 quantidade: parseInt(formData.quantidade),
                 precoTotal: parseFloat(formData.precoTotal)
             });
             setMessage('Venda registrada com sucesso!');
-            setFormData({
-                produtoId: '',
-                quantidade: 1,
-                precoTotal: '',
-            });
+            setFormData({ produtoId: '', quantidade: 1, precoTotal: '0.00' });
+            // Atualiza a lista de produtos para refletir o novo estoque
+            const response = await api.get('/api/produtos');
+            setProdutos(response.data);
         } catch (err) {
-            setError('Falha ao registrar a venda. Verifique os dados.');
-            console.error('Erro ao registrar venda:', err.response?.data?.error || err.message);
+            setError(err.response?.data?.error || 'Falha ao registrar a venda. Verifique os dados.');
+            console.error('Erro ao registrar venda:', err);
+        } finally {
+            setSubmitting(false);
         }
     };
     
-    if (loading) return <p>Carregando produtos...</p>;
-    if (error) return <p className="error-message">{error}</p>;
+    if (loading) return <CircularProgress />;
 
     return (
-        <>
-            <Header />
-            <div className="container">
-                <div className="venda-container">
-                    <form className="venda-form" onSubmit={handleSubmit}>
-                        <h2>Registrar Venda</h2>
-                        {message && <p className="success-message">{message}</p>}
-                        {error && <p className="error-message">{error}</p>}
-                        
-                        <div className="form-group">
-                            <label htmlFor="produtoId">Produto</label>
-                            <select
-                                id="produtoId"
-                                name="produtoId"
-                                value={formData.produtoId}
-                                onChange={handleChange}
-                                required
-                            >
-                                <option value="" disabled>Selecione um produto</option>
-                                {produtos.map(produto => (
-                                    <option key={produto.id} value={produto.id}>
-                                        {produto.nome}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+        <Box>
+            <Paper sx={{ 
+                backgroundColor: '#ffffff',
+                boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.05)',
+                borderRadius: '12px',
+                p: 4,
+            }}>
+                <Typography variant="h4" component="h1" sx={{ mb: 4, fontWeight: 700, textAlign: 'center', color: '#111827' }}>
+                    Registrar Venda
+                </Typography>
 
-                        <div className="form-group">
-                            <label htmlFor="quantidade">Quantidade</label>
-                            <input
-                                type="number"
-                                id="quantidade"
+                {error && !loading && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+                <form onSubmit={handleSubmit}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <FormControl fullWidth>
+                                <InputLabel id="produto-select-label">Produto</InputLabel>
+                                <Select
+                                    labelId="produto-select-label"
+                                    id="produtoId"
+                                    name="produtoId"
+                                    value={formData.produtoId}
+                                    label="Produto"
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <MenuItem value="" disabled><em>Selecione um produto</em></MenuItem>
+                                    {produtos.map(produto => (
+                                        <MenuItem key={produto.id} value={produto.id}>
+                                            {produto.nome} (Estoque: {produto.quantidade})
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
                                 name="quantidade"
+                                label="Quantidade"
+                                type="number"
+                                variant="outlined"
+                                fullWidth
+                                required
                                 value={formData.quantidade}
                                 onChange={handleChange}
-                                required
+                                InputProps={{ inputProps: { min: 1 } }}
                             />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="precoTotal">Preço Total (R$)</label>
-                            <input
-                                type="number"
-                                id="precoTotal"
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
                                 name="precoTotal"
-                                value={formData.precoTotal}
-                                onChange={handleChange}
-                                step="0.01"
-                                readOnly // Impede que o usuário edite o campo
+                                label="Preço Total"
+                                type="number"
+                                variant="outlined"
+                                fullWidth
                                 required
+                                value={formData.precoTotal}
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+                                    readOnly: true,
+                                }}
                             />
-                        </div>
-                        <button type="submit" className="venda-button">Registrar Venda</button>
-                    </form>
-                </div>
-            </div>
-        </>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                size="large"
+                                fullWidth
+                                disabled={submitting || !formData.produtoId}
+                                sx={{ 
+                                    py: 1.5, 
+                                    fontWeight: 600, 
+                                    backgroundColor: '#28a745',
+                                    '&:hover': { backgroundColor: '#1e7e34' },
+                                    borderRadius: '8px'
+                                }}
+                            >
+                                {submitting ? <CircularProgress size={26} color="inherit" /> : 'Registrar Venda'}
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </form>
+                
+                {message && <Alert severity="success" sx={{ mt: 3 }}>{message}</Alert>}
+
+            </Paper>
+        </Box>
     );
 };
 

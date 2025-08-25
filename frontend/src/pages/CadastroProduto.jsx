@@ -1,116 +1,143 @@
-import React, { useState, useEffect } from 'react';
-import api from '../services/api.js';
-import Header from '../components/Header';
-import '../assets/css/cadastro.css';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
+
+import { Box, Container, Typography, Paper, Grid, TextField, Button, CircularProgress, Alert, InputAdornment } from '@mui/material';
 
 const CadastroProduto = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         nome: '',
         descricao: '',
         preco: '',
         quantidade: '',
     });
-    const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [nomeEmpresa, setNomeEmpresa] = useState('');
-
-    useEffect(() => {
-        // Pega o nome da empresa do localStorage assim que o componente é carregado
-        const empresa = localStorage.getItem('companyName');
-        if (empresa) {
-            setNomeEmpresa(empresa);
-        }
-    }, []);
+    const [success, setSuccess] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setMessage('');
+        setLoading(true);
         setError('');
-
-        // Prepara os dados para enviar, incluindo o nome da empresa
-        const dadosDoProduto = {
-            ...formData,
-            nomeEmpresa: nomeEmpresa,
-        };
+        setSuccess('');
 
         try {
-            await api.post('/produtos', dadosDoProduto);
-            setMessage('Produto cadastrado com sucesso!');
-            setFormData({
-                nome: '',
-                descricao: '',
-                preco: '',
-                quantidade: '',
-            });
+            const user = JSON.parse(localStorage.getItem('user'));
+            const dataToSend = { ...formData, nomeEmpresa: user.companyName };
+
+            await api.post('/api/produtos', dataToSend);
+            setSuccess('Produto cadastrado com sucesso! Redirecionando...');
+            setTimeout(() => {
+                navigate('/estoque');
+            }, 2000);
+
         } catch (err) {
-            setError('Falha ao cadastrar o produto. Verifique os dados e tente novamente.');
-            console.error('Erro ao cadastrar produto:', err);
+            setError(err.response?.data?.error || 'Falha ao cadastrar o produto.');
+            setLoading(false);
         }
     };
 
     return (
-        <>
-            <Header />
-            <div className="container">
-                <div className="cadastro-container">
-                    <form className="cadastro-form" onSubmit={handleSubmit}>
-                        <h2>Cadastrar Produto</h2>
-                        {message && <p className="success-message">{message}</p>}
-                        {error && <p className="error-message">{error}</p>}
-                        
-                        <div className="form-group">
-                            <label htmlFor="nome">Nome</label>
-                            <input
-                                type="text"
-                                id="nome"
-                                name="nome"
-                                value={formData.nome}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="descricao">Descrição</label>
-                            <textarea
-                                id="descricao"
-                                name="descricao"
-                                value={formData.descricao}
-                                onChange={handleChange}
-                                rows="4"
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="preco">Preço</label>
-                            <input
-                                type="number"
-                                id="preco"
-                                name="preco"
-                                value={formData.preco}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="quantidade">Quantidade</label>
-                            <input
-                                type="number"
-                                id="quantidade"
-                                name="quantidade"
-                                value={formData.quantidade}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <button type="submit" className="cadastro-button">Cadastrar</button>
+        <Box sx={{ backgroundColor: '#f4f6f8', minHeight: '100vh', py: 5 }}>
+            <Container maxWidth="md">
+                <Paper sx={{ 
+                    backgroundColor: '#ffffff',
+                    boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.05)',
+                    borderRadius: '12px',
+                    p: 4,
+                }}>
+                    <Typography variant="h4" component="h1" sx={{ mb: 4, fontWeight: 700, textAlign: 'center', color: '#111827' }}>
+                        Cadastrar Novo Produto
+                    </Typography>
+
+                    <form onSubmit={handleSubmit}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    name="nome"
+                                    label="Nome do Produto"
+                                    variant="outlined"
+                                    fullWidth
+                                    required
+                                    value={formData.nome}
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    name="descricao"
+                                    label="Descrição"
+                                    variant="outlined"
+                                    fullWidth
+                                    multiline
+                                    rows={4}
+                                    value={formData.descricao}
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    name="preco"
+                                    label="Preço"
+                                    type="number"
+                                    variant="outlined"
+                                    fullWidth
+                                    required
+                                    value={formData.preco}
+                                    onChange={handleChange}
+                                    InputProps={{
+                                        startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    name="quantidade"
+                                    label="Quantidade"
+                                    type="number"
+                                    variant="outlined"
+                                    fullWidth
+                                    required
+                                    value={formData.quantidade}
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    size="large"
+                                    fullWidth
+                                    disabled={loading}
+                                    sx={{ 
+                                        py: 1.5, 
+                                        fontWeight: 600, 
+                                        backgroundColor: '#007BFF',
+                                        '&:hover': { backgroundColor: '#0056b3' },
+                                        borderRadius: '8px'
+                                    }}
+                                >
+                                    {loading ? <CircularProgress size={26} color="inherit" /> : 'Cadastrar Produto'}
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </form>
-                </div>
-            </div>
-        </>
+                    
+                    {success && <Alert severity="success" sx={{ mt: 3 }}>{success}</Alert>}
+                    {error && <Alert severity="error" sx={{ mt: 3 }}>{error}</Alert>}
+
+                </Paper>
+            </Container>
+        </Box>
     );
 };
 

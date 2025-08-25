@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import '../assets/css/auth.css';
+import { useAuth } from '../context/AuthContext'; 
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { login } = useAuth(); 
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -15,11 +17,12 @@ const Login = () => {
         try {
             const response = await api.post('/auth/login', { email, password });
             
-            // O backend retorna o token E o nome da empresa
-            localStorage.setItem('token', response.data.token);
             localStorage.setItem('companyName', response.data.companyName); 
 
-            navigate('/estoque');
+            login(response.data);
+
+            navigate('/dashboard');
+
         } catch (err) {
             setError('E-mail ou senha incorretos.');
             console.error(err);

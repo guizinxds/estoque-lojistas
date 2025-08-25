@@ -7,14 +7,17 @@ const jwt = require('jsonwebtoken');
 const prisma = new PrismaClient();
 const app = express();
 const PORT = 3001;
-const JWT_SECRET = 'sua-chave-secreta-muito-segura'; // Use uma string forte e única!
+const JWT_SECRET = 'sua-chave-secreta-muito-segura'; 
 
 app.use(cors());
 app.use(express.json());
 
-// --- Autenticação com JWT e Hashing de Senha ---
+const authMiddleware = require('./middleware/auth');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
-// Rota de Cadastro de Usuário (com criptografia de senha)
+
+
+// Rota de Registro de Usuário
 app.post('/auth/register', async (req, res) => {
     try {
         const { email, senha, nomeEmpresa } = req.body;
@@ -27,12 +30,12 @@ app.post('/auth/register', async (req, res) => {
             return res.status(409).json({ error: 'Este e-mail já está em uso.' });
         }
 
-        const hashedPassword = await bcrypt.hash(senha, 10); // Criptografa a senha
+        const hashedPassword = await bcrypt.hash(senha, 10);
 
         const newUser = await prisma.usuario.create({
             data: {
                 email,
-                senha: hashedPassword, // Salva a senha criptografada
+                senha: hashedPassword,
                 nomeEmpresa,
             },
         });
@@ -42,7 +45,7 @@ app.post('/auth/register', async (req, res) => {
     }
 });
 
-// Rota de Login (com verificação de senha e geração de JWT)
+// Rota de Login
 app.post('/auth/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -54,7 +57,7 @@ app.post('/auth/login', async (req, res) => {
             return res.status(401).json({ error: 'E-mail ou senha incorretos.' });
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.senha); // Compara a senha
+        const passwordMatch = await bcrypt.compare(password, user.senha);
 
         if (passwordMatch) {
             const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
@@ -67,27 +70,13 @@ app.post('/auth/login', async (req, res) => {
     }
 });
 
-// Middleware que protege as rotas e extrai o ID do token
-app.use((req, res, next) => {
-    const token = req.headers.authorization?.split(' ')[1];
 
-    if (!token) {
-        return res.status(401).json({ error: 'Acesso negado. Token não fornecido.' });
-    }
 
-    try {
-        const decodedToken = jwt.verify(token, JWT_SECRET);
-        req.userId = decodedToken.userId;
-        next();
-    } catch (error) {
-        res.status(401).json({ error: 'Token inválido.' });
-    }
-});
+// Registra as rotas da Dashboard com o prefixo /api/dashboard
+app.use('/api/dashboard', dashboardRoutes);
 
-// --- Rotas Protegidas (filtradas por userId) ---
-
-// Rotas de Produtos
-app.get('/produtos', async (req, res) => {
+// Rotas de Produtos (protegidas pelo middleware)
+app.get('/api/produtos', authMiddleware, async (req, res) => {
     try {
         const produtos = await prisma.produto.findMany({
             where: { userId: req.userId }
@@ -98,7 +87,7 @@ app.get('/produtos', async (req, res) => {
     }
 });
 
-app.post('/produtos', async (req, res) => {
+app.post('/api/produtos', authMiddleware, async (req, res) => {
     try {
         const { nome, descricao, preco, quantidade, nomeEmpresa } = req.body;
         const novoProduto = await prisma.produto.create({
@@ -117,7 +106,7 @@ app.post('/produtos', async (req, res) => {
     }
 });
 
-app.put('/produtos/:id', async (req, res) => {
+app.put('/api/produtos/:id', authMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         const { nome, descricao, preco, quantidade } = req.body;
@@ -137,7 +126,7 @@ app.put('/produtos/:id', async (req, res) => {
     }
 });
 
-app.delete('/produtos/:id', async (req, res) => {
+app.delete('/api/produtos/:id', authMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         
@@ -151,7 +140,7 @@ app.delete('/produtos/:id', async (req, res) => {
 });
 
 // Rota de Registro de Venda
-app.post('/vendas', async (req, res) => {
+app.post('/api/vendas', authMiddleware, async (req, res) => {
     try {
         const { produtoId, quantidade, precoTotal } = req.body;
         const produto = await prisma.produto.findUnique({
@@ -188,7 +177,7 @@ app.post('/vendas', async (req, res) => {
 });
 
 // Rota de Relatório
-app.get('/relatorios/mais-vendidos', async (req, res) => {
+app.get('/api/relatorios/mais-vendidos', authMiddleware, async (req, res) => {
     try {
         const produtosMaisVendidos = await prisma.venda.groupBy({
             by: ['produtoId'],
@@ -211,7 +200,7 @@ app.get('/relatorios/mais-vendidos', async (req, res) => {
                     select: { nome: true },
                 });
                 return {
-                    nome: produto.nome,
+                    nome: produto ? produto.nome : 'Produto não encontrado',
                     quantidadeVendida: venda._sum.quantidadeVendida,
                 };
             })
@@ -222,6 +211,7 @@ app.get('/relatorios/mais-vendidos', async (req, res) => {
         res.status(500).json({ error: 'Falha ao gerar o relatório de mais vendidos.' });
     }
 });
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

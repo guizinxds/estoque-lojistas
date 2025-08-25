@@ -9,6 +9,7 @@ import './assets/css/modal.css';
 import './assets/css/cadastro-usuario.css';
 import './assets/css/auth.css';
 import './assets/css/main.css';
+import './assets/css/dashboard.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

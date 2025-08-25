@@ -14,7 +14,7 @@ const ListaEstoque = () => {
 
     const fetchProdutos = async () => {
         try {
-            const response = await api.get('/produtos');
+            const response = await api.get('/api/produtos');
             setProdutos(response.data);
             setLoading(false);
         } catch (err) {
@@ -68,7 +68,6 @@ const ListaEstoque = () => {
 
     return (
         <>
-            <Header />
             <div className="container">
                 <div className="search-container">
                     <input
