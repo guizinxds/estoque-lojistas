@@ -7,7 +7,7 @@ const Header = ({ onToggleSidebar }) => {
         <AppBar 
             position="fixed"
             sx={{
-                zIndex: (theme) => theme.zIndex.drawer + 1, // Garante que o Header fique na frente da Sidebar
+                zIndex: (theme) => theme.zIndex.drawer + 1,
                 backgroundColor: '#ffffff',
                 color: '#111827',
                 boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.06), 0px 4px 5px 0px rgba(0,0,0,0.04), 0px 1px 10px 0px rgba(0,0,0,0.08)',

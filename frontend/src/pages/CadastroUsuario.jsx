@@ -7,7 +7,6 @@ const CadastroUsuario = () => {
     const [formData, setFormData] = useState({
         email: '',
         senha: '',
-        nomeEmpresa: '',
     });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
@@ -44,18 +43,6 @@ const CadastroUsuario = () => {
                 {message && <p className="success-message">{message}</p>}
                 {error && <p className="error-message">{error}</p>}
                 
-                {/* Campo para o nome da empresa */}
-                <div className="form-group">
-                    <label htmlFor="nomeEmpresa">Nome da Empresa</label>
-                    <input
-                        type="text"
-                        id="nomeEmpresa"
-                        name="nomeEmpresa"
-                        value={formData.nomeEmpresa}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
                 
                 <div className="form-group">
                     <label htmlFor="email">E-mail</label>
