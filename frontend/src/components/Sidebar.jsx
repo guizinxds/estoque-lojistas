@@ -11,7 +11,6 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 const openWidth = 240;
 const closedWidth = 70;
 
-// A Sidebar agora recebe 'isOpen' como uma propriedade
 const Sidebar = ({ isOpen }) => {
     const navigate = useNavigate();
     const location = useLocation();
