@@ -7,6 +7,7 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import Exit from '@mui/icons-material/ExitToApp';
 
 
 const openWidth = 240;
@@ -24,6 +25,7 @@ const Sidebar = ({ isOpen }) => {
         { text: 'Estoque', icon: <InventoryIcon />, path: '/estoque' },
         { text: 'Registrar Venda', icon: <ReceiptIcon />, path: '/venda' },
         { text: 'Relatórios', icon: <AssessmentIcon />, path: '/relatorios' },
+        { text: 'Sair', icon: <Exit/>, path: '/login'},
     ];
 
     return (
