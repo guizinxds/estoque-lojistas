@@ -8,8 +8,11 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
+
 const openWidth = 240;
 const closedWidth = 70;
+
+const drawerWidth = 210; 
 
 const Sidebar = ({ isOpen }) => {
     const navigate = useNavigate();
@@ -17,8 +20,8 @@ const Sidebar = ({ isOpen }) => {
 
     const menuItems = [
         { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-        { text: 'Estoque', icon: <InventoryIcon />, path: '/estoque' },
         { text: 'Cadastrar Produto', icon: <AddCircleOutlineIcon />, path: '/cadastro' },
+        { text: 'Estoque', icon: <InventoryIcon />, path: '/estoque' },
         { text: 'Registrar Venda', icon: <ReceiptIcon />, path: '/venda' },
         { text: 'Relatórios', icon: <AssessmentIcon />, path: '/relatorios' },
     ];

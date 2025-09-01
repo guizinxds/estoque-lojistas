@@ -39,7 +39,7 @@ const ListaEstoque = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            await api.put(`/produtos/${editingProduct.id}`, editingProduct);
+            await api.put(`/api/produtos/${editingProduct.id}`, editingProduct);
             await fetchProdutos();
             setEditingProduct(null);
         } catch (err) {
@@ -50,7 +50,7 @@ const ListaEstoque = () => {
 
     const handleConfirmDelete = async () => {
         try {
-            await api.delete(`/produtos/${deletingProduct.id}`);
+            await api.delete(`/api/produtos/${deletingProduct.id}`);
             await fetchProdutos();
             setDeletingProduct(null);
         } catch (err) {
@@ -109,7 +109,7 @@ const ListaEstoque = () => {
                 )}
             </div>
 
-            {/* Modal de Edição */}
+            
             {editingProduct && (
                 <div className="modal">
                     <div className="modal-content">
