@@ -23,6 +23,7 @@ const Header = ({ onToggleSidebar }) => {
                 >
                     <MenuIcon />
                 </IconButton>
+                    <img src='logo.svg' alt='logo'></img>
                 <Typography variant="h6" noWrap component="div">
                     Estoque 360
                 </Typography>
