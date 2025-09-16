@@ -3,14 +3,11 @@ import React, { createContext, useState, useContext } from 'react';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    // A lógica inicial lê a chave 'user' do localStorage
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
 
-    // ESTA É A FUNÇÃO CORRIGIDA
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
+    const nomeEmpresa = user?.companyName || null;
     const login = (userData) => {
-        // Garantimos que estamos salvando o objeto userData INTEIRO,
-        // que contém tanto o 'token' quanto o 'companyName'.
-        // JSON.stringify converte { token: '...', companyName: '...' } em uma string.
+
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
     };
@@ -23,7 +20,7 @@ export const AuthProvider = ({ children }) => {
     const isAuthenticated = !!user;
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, login, logout, nomeEmpresa }}>
             {children}
         </AuthContext.Provider>
     );
