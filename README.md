@@ -37,32 +37,32 @@ Seu design modular permite evoluir a aplicação para novas funcionalidades sem 
 - Emissão de **comprovante de pagamento**  
 - Interface intuitiva construída com **Material UI**  
 - API segura com autenticação JWT  
-- Integração com **Prisma ORM** para gerenciamento de banco de dados  
+- Integração com **Prisma** para gerenciamento de banco de dados  
 
 ---
 
 ## 📸 Screenshots
 
 ### 🔑 Tela de Login
-![Tela de Login](docs/screenshots/login.png)
+![Tela de Login](screenshots/login.png)
 
 ### 📊 Dashboard
-![Dashboard](docs/screenshots/dashboard.png)
+![Dashboard](screenshots/dashboard.png)
 
 ### ➕ Cadastro de Produto
-![Cadastro de Produto](docs/screenshots/cadastro-produto.png)
+![Cadastro de Produto](screenshots/cadastro-produto.png)
 
 ### 📋 Estoque
-![Lista de Produtos](docs/screenshots/estoque.png)
+![Lista de Produtos](screenshots/estoque.png)
 
 ### 🛒 Registro de Vendas
-![Registro de Vendas](docs/screenshots/registro-venda.png)
+![Registro de Vendas](screenshots/registro-venda.png)
 
 ### 📈 Relatórios de Vendas
-![Relatórios de Vendas](docs/screenshots/relatorios.png)
+![Relatórios de Vendas](screenshots/relatorios.png)
 
 ### 🧾 Comprovante de Pagamento
-![Comprovante de Pagamento](docs/screenshots/comprovante.png)
+![Comprovante de Pagamento](screenshots/comprovante.png)
 
 ---
 
