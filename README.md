@@ -184,7 +184,8 @@ Acesse a aplicação em:
 ---
 
 ## 👨‍💻 Contribuidores
-- [@guizinxds](https://github.com/guizinxds) (criador)  
+- [@guizinxds](https://github.com/guizinxds) (criador)
+- [@hilkerx](https://github.com/hilkerx) (colaborador)
 
 ---
 
