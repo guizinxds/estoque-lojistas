@@ -155,7 +155,6 @@ Acesse a aplicação em:
 - dotenv ^17.2.2 (variáveis de ambiente)  
 - cors ^2.8.5 (controle de acesso)  
 - Axios ^1.12.2
-- 
 ---
 
 ## 💡 Exemplos de Uso
