@@ -112,15 +112,7 @@ npm install
 ### Backend
 No diretório `backend`, crie um arquivo `.env` com as variáveis necessárias:
 ```env
-PORT=5000
-DATABASE_URL="mysql://user:password@localhost:3306/estoque"
-JWT_SECRET="seuSegredoSeguro"
-```
-
-### Frontend
-No diretório `frontend`, configure a URL da API (caso esteja diferente da padrão `http://localhost:5000`) em um arquivo de ambiente:
-```env
-VITE_API_URL=http://localhost:5000
+DATABASE_URL = "file:./prisma/dev.db"
 ```
 
 ---
