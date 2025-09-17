@@ -157,14 +157,13 @@ Acesse a aplicação em:
 
 ### Backend
 - Express ^5.1.0  
-- Prisma ^6.14.0  
-- @Prisma/client ^6.14.0  
+- Prisma ^6.14.0    
 - bcrypt ^6.0.0 (hash de senhas)  
 - jsonwebtoken ^9.0.2 (autenticação)  
 - dotenv ^17.2.2 (variáveis de ambiente)  
 - cors ^2.8.5 (controle de acesso)  
-- Axios ^1.12.2  
-
+- Axios ^1.12.2
+- 
 ---
 
 ## 💡 Exemplos de Uso
