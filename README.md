@@ -1,4 +1,4 @@
-# 📦 Estoque Lojistas
+# 📦 Estoque 360
 
 Um sistema completo de **gestão de estoque** para **lojistas de diferentes segmentos**, desenvolvido com **React + Vite (frontend)** e **Node.js + Express + Prisma (backend)**.  
 A aplicação possibilita o controle centralizado de produtos, garantindo praticidade no gerenciamento de quantidades, cadastro e monitoramento de inventário.
@@ -24,7 +24,7 @@ A aplicação possibilita o controle centralizado de produtos, garantindo pratic
 ---
 
 ## 🚀 Introdução
-O **Estoque Lojistas** é uma aplicação web moderna que auxilia pequenos e médios lojistas no controle de estoque.  
+O **Estoque 360** é uma aplicação web moderna que auxilia pequenos e médios lojistas no controle de estoque.  
 Seu design modular permite evoluir a aplicação para novas funcionalidades sem comprometer a performance.
 
 ---
@@ -112,15 +112,7 @@ npm install
 ### Backend
 No diretório `backend`, crie um arquivo `.env` com as variáveis necessárias:
 ```env
-PORT=5000
-DATABASE_URL="mysql://user:password@localhost:3306/estoque"
-JWT_SECRET="seuSegredoSeguro"
-```
-
-### Frontend
-No diretório `frontend`, configure a URL da API (caso esteja diferente da padrão `http://localhost:5000`) em um arquivo de ambiente:
-```env
-VITE_API_URL=http://localhost:5000
+DATABASE_URL = "file:./prisma/dev.db"
 ```
 
 ---
@@ -157,14 +149,12 @@ Acesse a aplicação em:
 
 ### Backend
 - Express ^5.1.0  
-- Prisma ^6.14.0  
-- @Prisma/client ^6.14.0  
+- Prisma ^6.14.0    
 - bcrypt ^6.0.0 (hash de senhas)  
 - jsonwebtoken ^9.0.2 (autenticação)  
 - dotenv ^17.2.2 (variáveis de ambiente)  
 - cors ^2.8.5 (controle de acesso)  
-- Axios ^1.12.2  
-
+- Axios ^1.12.2
 ---
 
 ## 💡 Exemplos de Uso
