@@ -1,4 +1,4 @@
-# 📦 Estoque Lojistas
+# 📦 Estoque 360
 
 Um sistema completo de **gestão de estoque** para **lojistas de diferentes segmentos**, desenvolvido com **React + Vite (frontend)** e **Node.js + Express + Prisma (backend)**.  
 A aplicação possibilita o controle centralizado de produtos, garantindo praticidade no gerenciamento de quantidades, cadastro e monitoramento de inventário.
@@ -24,7 +24,7 @@ A aplicação possibilita o controle centralizado de produtos, garantindo pratic
 ---
 
 ## 🚀 Introdução
-O **Estoque Lojistas** é uma aplicação web moderna que auxilia pequenos e médios lojistas no controle de estoque.  
+O **Estoque 360** é uma aplicação web moderna que auxilia pequenos e médios lojistas no controle de estoque.  
 Seu design modular permite evoluir a aplicação para novas funcionalidades sem comprometer a performance.
 
 ---
