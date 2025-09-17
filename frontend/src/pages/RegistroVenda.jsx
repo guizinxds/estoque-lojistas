@@ -139,26 +139,22 @@ const RegistroVenda = () => {
         setOpenModal(true);
     };
 
-    // --- ⬇️ ALTERAÇÃO 2 ⬇️ ---
-    // Esta função agora salva a venda e gera o comprovante.
     const handleGerarComprovante = async () => {
         setSubmitting(true);
         setMessage('');
-        setError(''); // Limpa erros do formulário principal
+        setError(''); 
 
         try {
-            // 1. Salva a venda no banco com os dados do cliente
             await api.post('/api/vendas', {
                 produtoId: formData.produto.id,
                 quantidade: parseInt(formData.quantidade),
                 precoTotal: parseFloat(formData.precoTotal),
                 clienteNome: clienteNome,
-                clienteCpf: clienteCpf.replace(/\D/g, '') // Envia CPF sem máscara
+                clienteCpf: clienteCpf.replace(/\D/g, '') 
             });
 
             setMessage('Venda registrada com sucesso!');
             
-            // 2. Gera o comprovante em PDF
             const produtoVendido = formData.produto;
             if (produtoVendido) {
                 gerarComprovante({
@@ -167,23 +163,20 @@ const RegistroVenda = () => {
                     quantidade: formData.quantidade,
                     precoTotal: parseFloat(formData.precoTotal),
                     clienteNome,
-                    clienteCpf // Envia CPF com máscara para o PDF
+                    clienteCpf 
                 });
             }
             
-            // 3. Fecha o Modal e limpa o formulário
             setOpenModal(false);
             setFormData({ produto: null, quantidade: 1, precoTotal: '0.00' });
             setClienteNome('');
             setClienteCpf('');
             setCpfError('');
 
-            // 4. Atualiza a lista de produtos
             const updatedProductsResponse = await api.get('/api/produtos');
             setProdutos(updatedProductsResponse.data);
 
         } catch (err) {
-            // Em caso de erro, exibe a mensagem (pode ser no modal ou no form principal)
             setError(err.response?.data?.error || 'Falha ao registrar a venda. Verifique os dados.');
             console.error('Erro ao registrar venda:', err);
         } finally {
@@ -286,7 +279,6 @@ const RegistroVenda = () => {
                                     borderRadius: '8px'
                                 }}
                             >
-                                {/* O botão principal não precisa mais do spinner, pois ele só abre o modal */}
                                 Registrar Venda
                             </Button>
                         </Grid>
@@ -347,8 +339,6 @@ const RegistroVenda = () => {
                                 onClick={handleGerarComprovante}
                                 disabled={!clienteNome || !validateCPF(clienteCpf) || submitting}
                             >
-                                {/* --- ⬇️ ALTERAÇÃO 3 ⬇️ --- */}
-                                {/* Adicionado o spinner de carregamento neste botão */}
                                 {submitting ? <CircularProgress size={24} color="inherit" /> : 'Finalizar e Gerar Comprovante'}
                             </Button>
                         </Box>

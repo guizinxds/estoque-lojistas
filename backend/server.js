@@ -15,10 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 const authMiddleware = require('./middleware/auth');
-const dashboardRoutes = require('./routes/dashboardRoutes');
-const auth = require('./middleware/auth');
-
-
+const dashboardRoutes = require('./routes/dashboardRoutes'); 
 
 // Rota de Registro de Usuário
 app.post('/auth/register', async (req, res) => {
@@ -77,11 +74,13 @@ app.post('/auth/login', async (req, res) => {
 // Registra as rotas da Dashboard com o prefixo /api/dashboard
 app.use('/api/dashboard', dashboardRoutes);
 
-// Rotas de Produtos (protegidas pelo middleware)
 app.get('/api/produtos', authMiddleware, async (req, res) => {
     try {
         const produtos = await prisma.produto.findMany({
-            where: { userId: req.userId }
+            where: { 
+                userId: req.userId,
+                ativo: true 
+            }
         });
         res.json(produtos);
     } catch (error) {
@@ -133,34 +132,47 @@ app.put('/api/produtos/:id', authMiddleware, async (req, res) => {
 app.delete('/api/produtos/:id', authMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
-        
-        await prisma.produto.delete({
-            where: { id: parseInt(id), userId: req.userId }
+        await prisma.produto.update({
+            where: { id: parseInt(id), userId: req.userId },
+            data: {
+                ativo: false
+            }
         });
+
         res.status(204).end();
     } catch (error) {
-        res.status(500).json({ error: 'Falha ao excluir o produto.' });
+        console.error("ERRO AO TENTAR EXCLUIR/INATIVAR PRODUTO:", error);
+        res.status(500).json({ error: 'Falha ao excluir o produto. Verifique se há vendas associadas.' });
     }
 });
+
 
 // Rota de Registro de Venda
 app.post('/api/vendas', authMiddleware, async (req, res) => {
     try {
-        const { produtoId, quantidade, precoTotal, clienteNome, clienteCpf} = req.body;
-        const produto = await prisma.produto.findUnique({
-            where: { id: parseInt(produtoId), userId: req.userId }
+        const { produtoId, quantidade, precoTotal, clienteNome, clienteCpf } = req.body;
+
+        const produto = await prisma.produto.findFirst({
+            where: { 
+                id: parseInt(produtoId), 
+                userId: req.userId 
+            }
         });
 
         if (!produto) {
             return res.status(404).json({ error: 'Produto não encontrado.' });
         }
+
         if (produto.quantidade < parseInt(quantidade)) {
             return res.status(400).json({ error: 'Estoque insuficiente.' });
         }
 
         await prisma.$transaction([
-            prisma.produto.update({
-                where: { id: parseInt(produtoId), userId: req.userId },
+            prisma.produto.updateMany({
+                where: { 
+                    id: parseInt(produtoId), 
+                    userId: req.userId 
+                },
                 data: {
                     quantidade: produto.quantidade - parseInt(quantidade)
                 }
@@ -176,13 +188,17 @@ app.post('/api/vendas', authMiddleware, async (req, res) => {
                 }
             })
         ]);
+
         res.status(201).json({ message: 'Venda registrada com sucesso!' });
+
     } catch (error) {
+        console.error('Erro ao registrar venda:', error); 
         res.status(500).json({ error: 'Falha ao registrar a venda.' });
     }
 });
 
-// Rota de Relatório
+
+// Rotas de Relatório 
 app.get('/api/relatorios/mais-vendidos', authMiddleware, async (req, res) => {
     try {
         const produtosMaisVendidos = await prisma.venda.groupBy({
@@ -218,7 +234,6 @@ app.get('/api/relatorios/mais-vendidos', authMiddleware, async (req, res) => {
     }
 });
 
-
 app.get('/api/relatorios/por-cpf/:cpf', authMiddleware, async (req, res) => {
     try{
         const {cpf} = req.params;
@@ -246,6 +261,25 @@ app.get('/api/relatorios/por-cpf/:cpf', authMiddleware, async (req, res) => {
     }
 });
 
+app.put('/api/produtos/:id/inativar', authMiddleware, async(req, res) => {
+    try{
+        const { id } = req.params;
+        await prisma.produto.update({
+            where:{
+                id: parseInt(id),
+                userId: req.userId
+            },
+            data: {
+                ativo: false
+            }
+        });
+        res.status(204).end();
+        
+    } catch(error){
+        console.error("ERRO AO INATIVAR PRODUTO", error);
+        res.status(500).json({error: 'Falha ao inativar o produto.' });
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
