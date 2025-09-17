@@ -16,6 +16,7 @@ app.use(express.json());
 
 const authMiddleware = require('./middleware/auth');
 const dashboardRoutes = require('./routes/dashboardRoutes');
+const auth = require('./middleware/auth');
 
 
 
@@ -145,7 +146,7 @@ app.delete('/api/produtos/:id', authMiddleware, async (req, res) => {
 // Rota de Registro de Venda
 app.post('/api/vendas', authMiddleware, async (req, res) => {
     try {
-        const { produtoId, quantidade, precoTotal } = req.body;
+        const { produtoId, quantidade, precoTotal, clienteNome, clienteCpf} = req.body;
         const produto = await prisma.produto.findUnique({
             where: { id: parseInt(produtoId), userId: req.userId }
         });
@@ -169,7 +170,9 @@ app.post('/api/vendas', authMiddleware, async (req, res) => {
                     produtoId: parseInt(produtoId),
                     quantidadeVendida: parseInt(quantidade),
                     precoTotal: parseFloat(precoTotal),
-                    userId: req.userId
+                    userId: req.userId,
+                    clienteNome,
+                    clienteCpf
                 }
             })
         ]);
@@ -212,6 +215,34 @@ app.get('/api/relatorios/mais-vendidos', authMiddleware, async (req, res) => {
         res.status(200).json(produtosComNomes);
     } catch (error) {
         res.status(500).json({ error: 'Falha ao gerar o relatório de mais vendidos.' });
+    }
+});
+
+
+app.get('/api/relatorios/por-cpf/:cpf', authMiddleware, async (req, res) => {
+    try{
+        const {cpf} = req.params;
+        const vendas = await prisma.venda.findMany({
+            where: {
+                userId: req.userId,
+                clienteCpf: cpf
+            },
+            include: {
+                produto: {
+                    select: {
+                        nome: true,
+                        descricao: true
+                    }
+                }
+            },
+            orderBy: {
+                dataVenda: 'desc'
+            }
+        });
+        res.status(200).json(vendas);
+    } catch(error){
+        console.error('ERRO AO BUSCAR VENDAS POR CPF: ', error);
+        res.status(500).json({error: 'Falha ao buscar as vendas.' });
     }
 });
 

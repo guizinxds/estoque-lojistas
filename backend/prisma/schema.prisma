@@ -39,4 +39,8 @@ model Venda {
   dataVenda         DateTime @default(now())
   userId            Int
   usuario           Usuario  @relation(fields: [userId], references: [id])
+  clienteNome       String?
+  clienteCpf        String?
+
+  @@map("vendas")
 }
