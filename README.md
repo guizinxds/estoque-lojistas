@@ -71,7 +71,7 @@ Seu design modular permite evoluir a aplicação para novas funcionalidades sem 
 estoque-lojistas/
 ├── backend/     # API REST em Node.js + Express + Prisma
 ├── frontend/    # Aplicação em React + Vite
-└── README.md    # Documentação
+└── README.md
 ```
 
 - **Frontend**: React 19, Vite, Material UI, Axios, React Router  
