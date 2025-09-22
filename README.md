@@ -173,6 +173,9 @@ Acesse a aplicação em:
 
 ---
 
+## 🌐 Hospedagem
+- [Vercel](https://estoque-lojistas-4tg2.vercel.app/)
+
 ## 👨‍💻 Contribuidores
 - [@guizinxds](https://github.com/guizinxds) (criador)
 - [@hilkerx](https://github.com/hilkerx) (colaborador)
