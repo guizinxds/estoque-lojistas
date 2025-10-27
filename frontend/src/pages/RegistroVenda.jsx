@@ -127,8 +127,6 @@ const RegistroVenda = () => {
         setFormData(newFormData);
     };
 
-    // --- ⬇️ ALTERAÇÃO 1 ⬇️ ---
-    // Esta função agora apenas abre o Modal.
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!formData.produto) {
@@ -139,8 +137,6 @@ const RegistroVenda = () => {
         setOpenModal(true);
     };
 
-    // --- ⬇️ ALTERAÇÃO 2 ⬇️ ---
-    // Esta função agora salva a venda e gera o comprovante.
     const handleGerarComprovante = async () => {
         setSubmitting(true);
         setMessage('');
@@ -286,7 +282,6 @@ const RegistroVenda = () => {
                                     borderRadius: '8px'
                                 }}
                             >
-                                {/* O botão principal não precisa mais do spinner, pois ele só abre o modal */}
                                 Registrar Venda
                             </Button>
                         </Grid>
@@ -347,8 +342,6 @@ const RegistroVenda = () => {
                                 onClick={handleGerarComprovante}
                                 disabled={!clienteNome || !validateCPF(clienteCpf) || submitting}
                             >
-                                {/* --- ⬇️ ALTERAÇÃO 3 ⬇️ --- */}
-                                {/* Adicionado o spinner de carregamento neste botão */}
                                 {submitting ? <CircularProgress size={24} color="inherit" /> : 'Finalizar e Gerar Comprovante'}
                             </Button>
                         </Box>
