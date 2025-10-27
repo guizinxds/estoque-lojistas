@@ -48,16 +48,20 @@ const ListaEstoque = () => {
         }
     };
 
-    const handleConfirmDelete = async () => {
-        try {
-            await api.delete(`/api/produtos/${deletingProduct.id}`);
-            await fetchProdutos();
-            setDeletingProduct(null);
-        } catch (err) {
-            setError('Falha ao excluir o produto.');
-            console.error('Erro ao excluir produto:', err);
-        }
-    };
+const handleConfirmDelete = async () => {
+    try {
+        await api.put(`/api/produtos/${deletingProduct.id}/inativar`);
+
+        const response = await api.get('/api/produtos');
+        
+        setProdutos(response.data);
+        setDeletingProduct(null);
+
+    } catch (err) {
+        setError('Falha ao inativar o produto.');
+        console.error('Erro ao inativar produto:', err);
+    }
+};
 
     const filteredProdutos = produtos.filter(produto =>
         produto.nome.toLowerCase().includes(searchTerm.toLowerCase())

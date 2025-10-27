@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -28,6 +28,8 @@ model Produto {
   vendas      Venda[]
   userId      Int
   usuario     Usuario  @relation(fields: [userId], references: [id])
+
+  ativo       Boolean  @default(true)
 }
 
 model Venda {
